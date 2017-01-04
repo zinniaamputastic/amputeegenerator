@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <title>Amputee Generator</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  </head>
+  <body>
+    <h1 id="amputee"><noscript>This page needs JavaScript.</noscript></h1>
+    <button id="refresh">Refresh</button>
+  </body>
+  <script>
+    (function() {
+      function choice(items) {
+        return items[Math.floor(Math.random() * items.length)];
+      }
+      function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      }
+      function refresh() {
+        var gender = choice([
+          {subj: 'he', obj: 'him', poss: 'his'},
+          {subj: 'she', obj: 'her', poss: 'her'}
+        ]);
+        var method = choice([
+          'lost', 'is missing', 'cut off', 'chopped off', 'sliced off',
+          'lopped off', 'severed']);
+        var side = choice(['left', 'right']);
+        var limb = choice(['hand', 'arm', 'foot', 'leg']);
+        document.getElementById('amputee').innerText =
+            capitalize(gender.subj) + ' ' + method + ' ' + gender.poss + ' ' +
+            side + ' ' + limb + '.';
+      }
+      document.getElementById('refresh').onclick = refresh;
+      refresh();
+    })();
+  </script>
+</html>
