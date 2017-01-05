@@ -10,26 +10,30 @@
     <button id="refresh">Refresh</button>
   </body>
   <script>
-    (function() {
+    (function global() {
       function choice(items) {
         return items[Math.floor(Math.random() * items.length)];
       }
       function capitalize(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
       }
+      function adverbify(verb) {
+        var adverb = choice([null, 'deliberately', 'intentionally', 'voluntarily']);
+        if (adverb) {
+          return adverb + ' ' + verb;
+        } else {
+          return verb;
+        }
+      }
       function refresh() {
-        var gender = choice([
-          {subj: 'he', obj: 'him', poss: 'his'},
-          {subj: 'she', obj: 'her', poss: 'her'}
-        ]);
+        var gender = choice([{subj: 'he', obj: 'him', poss: 'his'}, {subj: 'she', obj: 'her', poss: 'her'}]);
         var method = choice([
-          'lost', 'is missing', 'cut off', 'chopped off', 'sliced off',
-          'lopped off', 'severed']);
+            'lost', 'is missing', 'no longer has', adverbify('cut off'), adverbify('chopped off'), adverbify('sliced off'),
+            adverbify('lopped off'), adverbify('severed'), adverbify('amputated'), adverbify('removed')]);
         var side = choice(['left', 'right']);
         var limb = choice(['hand', 'arm', 'foot', 'leg']);
         document.getElementById('amputee').innerText =
-            capitalize(gender.subj) + ' ' + method + ' ' + gender.poss + ' ' +
-            side + ' ' + limb + '.';
+            capitalize(gender.subj) + ' ' + method + ' ' + gender.poss + ' ' + side + ' ' + limb + '.';
       }
       document.getElementById('refresh').onclick = refresh;
       refresh();
