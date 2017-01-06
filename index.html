@@ -96,6 +96,9 @@
               limbPhrases.push(limbs[i].side + ' ' + limbs[i].part);
             }
           }
+          if (i === limbs.length - 1) {
+            limbPhrases.push(limbs[i].side + ' ' + limbs[i].part);
+          }
         }
         document.getElementById('amputee').innerText =
             capitalize(gender.subj) + ' ' + method + ' ' + gender.poss + ' ' + aggregate(limbPhrases) + '.';
