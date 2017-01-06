@@ -7,12 +7,23 @@
   </head>
   <body>
     <h1 id="amputee"><noscript>This page needs JavaScript.</noscript></h1>
+    <p>Support for fingers and toes coming soon!</p>
     <button id="refresh">Refresh</button>
   </body>
   <script>
     (function global() {
       function choice(items) {
         return items[Math.floor(Math.random() * items.length)];
+      }
+      function weightedChoice(itemDict) {
+        var sum = 0;
+        var position = Math.random();
+        for (var item in itemDict) {
+          sum += itemDict[item];
+          if (position <= sum) {
+            return item;
+          }
+        }
       }
       function capitalize(str) {
         return str.charAt(0).toUpperCase() + str.slice(1);
@@ -25,6 +36,15 @@
           return verb;
         }
       }
+      function shuffle(array) {
+        for (var i = array.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var temp = array[i];
+          array[i] = array[j];
+          array[j] = temp;
+        }
+        return array;
+      }
       function refresh() {
         var gender = choice([{subj: 'he', obj: 'him', poss: 'his'}, {subj: 'she', obj: 'her', poss: 'her'}]);
         var method = choice([
@@ -32,8 +52,30 @@
             adverbify('lopped off'), adverbify('severed'), adverbify('amputated'), adverbify('removed')]);
         var side = choice(['left', 'right']);
         var limb = choice(['hand', 'arm', 'foot', 'leg']);
+        var limbIndices = [0, 1, 2, 3];
+        shuffle(limbIndices);
+        var numberOfLimbs = weightedChoice({1: 0.4, 2: 0.3, 3: 0.2, 4: 0.1});
+        var limbs = [];
+        var limbOptions = [
+            'left' + choice(['hand', 'arm']),
+            'right' + choice(['hand', 'arm']),
+            'left' + choice(['foot', 'leg']),
+            'right' + choice(['foot', 'leg'])];
+        for (var i = 0; i < numberOfLimbs; i++) {
+          limbs.push(limbOptions[limbIndices[i]]);
+        }
+        switch (numberOfLimbs) {
+          case 1:
+            var aggregateLimbs = limbs[0];
+            break;
+          case 2:
+            var aggregateLimbs = limbs[0] + ' and ' + limbs[1];
+            break;
+          default:
+            var aggregateLimbs = limbs.slice(0, numberOfLimbs - 1).join(', ') + ', and ' + limbs[numberOfLimbs - 1];
+        }
         document.getElementById('amputee').innerText =
-            capitalize(gender.subj) + ' ' + method + ' ' + gender.poss + ' ' + side + ' ' + limb + '.';
+            capitalize(gender.subj) + ' ' + method + ' ' + gender.poss + ' ' + aggregateLimbs + '.';
       }
       document.getElementById('refresh').onclick = refresh;
       refresh();
