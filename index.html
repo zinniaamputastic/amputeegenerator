@@ -45,6 +45,25 @@
         }
         return array;
       }
+      function pluralize(word) {
+        switch (word) {
+          case 'foot':
+            return 'feet';
+          default:
+            return word + 's';
+        }
+      }
+      function aggregate(list) {
+        switch (list.length) {
+          case 1:
+            return list[0];
+            break;
+          case 2:
+            return list[0] + ' and ' + list[1];
+          default:
+            return list.slice(0, list.length - 1).join(', ') + ', and ' + list[list.length - 1];
+        }
+      }
       function refresh() {
         var gender = choice([{subj: 'he', obj: 'him', poss: 'his'}, {subj: 'she', obj: 'her', poss: 'her'}]);
         var method = choice([
@@ -53,10 +72,10 @@
         var numberOfLimbs = Number(weightedChoice({1: 0.4, 2: 0.3, 3: 0.2, 4: 0.1}));
         var limbs = [];        
         var limbOptions = [
-            'left ' + choice(['hand', 'arm']),
-            'right ' + choice(['hand', 'arm']),
-            'left ' + choice(['foot', 'leg']),
-            'right ' + choice(['foot', 'leg'])];
+            {side: 'left', part: choice(['hand', 'arm'])},
+            {side: 'right', part: choice(['hand', 'arm'])},
+            {side: 'left', part: choice(['foot', 'leg'])},
+            {side: 'right', part: choice(['foot', 'leg'])}];
         var limbIndexOptions = [0, 1, 2, 3];
         shuffle(limbIndexOptions);
         var limbIndices = limbIndexOptions.slice(0, numberOfLimbs);
@@ -64,18 +83,22 @@
         for (var i = 0; i < numberOfLimbs; i++) {
           limbs.push(limbOptions[limbIndices[i]]);
         }
-        switch (numberOfLimbs) {
-          case 1:
-            var aggregateLimbs = limbs[0];
-            break;
-          case 2:
-            var aggregateLimbs = limbs[0] + ' and ' + limbs[1];
-            break;
-          default:
-            var aggregateLimbs = limbs.slice(0, numberOfLimbs - 1).join(', ') + ', and ' + limbs[numberOfLimbs - 1];
+        var limbPhrases = [];
+        if (numberOfLimbs === 4 && limbs[0].part === 'arm' && limbs[1].part === 'arm' && limbs[2].part === 'leg' &&
+            limbs[3].part === 'leg') {
+          limbPhrases.push('all four of ' + gender.poss + ' limbs');
+        } else {
+          for (var i = 0; i < limbs.length - 1; i++) {
+            if (limbs[i].part === limbs[i + 1].part) {
+              limbPhrases.push('both of ' + gender.poss + ' ' + pluralize(limbs[i].part));
+              i++;
+            } else {
+              limbPhrases.push(limbs[i].side + ' ' + limbs[i].part);
+            }
+          }
         }
         document.getElementById('amputee').innerText =
-            capitalize(gender.subj) + ' ' + method + ' ' + gender.poss + ' ' + aggregateLimbs + '.';
+            capitalize(gender.subj) + ' ' + method + ' ' + gender.poss + ' ' + aggregate(limbPhrases) + '.';
       }
       document.getElementById('refresh').onclick = refresh;
       refresh();
