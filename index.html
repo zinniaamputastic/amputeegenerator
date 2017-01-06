@@ -50,17 +50,17 @@
         var method = choice([
             'lost', 'is missing', 'no longer has', adverbify('cut off'), adverbify('chopped off'), adverbify('sliced off'),
             adverbify('lopped off'), adverbify('severed'), adverbify('amputated'), adverbify('removed')]);
-        var side = choice(['left', 'right']);
-        var limb = choice(['hand', 'arm', 'foot', 'leg']);
-        var limbIndices = [0, 1, 2, 3];
-        shuffle(limbIndices);
-        var numberOfLimbs = weightedChoice({1: 0.4, 2: 0.3, 3: 0.2, 4: 0.1});
-        var limbs = [];
+        var numberOfLimbs = Number(weightedChoice({1: 0.4, 2: 0.3, 3: 0.2, 4: 0.1}));
+        var limbs = [];        
         var limbOptions = [
-            'left' + choice(['hand', 'arm']),
-            'right' + choice(['hand', 'arm']),
-            'left' + choice(['foot', 'leg']),
-            'right' + choice(['foot', 'leg'])];
+            'left ' + choice(['hand', 'arm']),
+            'right ' + choice(['hand', 'arm']),
+            'left ' + choice(['foot', 'leg']),
+            'right ' + choice(['foot', 'leg'])];
+        var limbIndexOptions = [0, 1, 2, 3];
+        shuffle(limbIndexOptions);
+        var limbIndices = limbIndexOptions.slice(0, numberOfLimbs);
+        limbIndices.sort();
         for (var i = 0; i < numberOfLimbs; i++) {
           limbs.push(limbOptions[limbIndices[i]]);
         }
