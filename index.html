@@ -94,11 +94,12 @@
             limbs[3].part === 'leg') {
           limbs = [{adjective: {true: 'all four', false: 'any'}, noun: 'limb', plural: true}];
         } else {
+          var both = {true: 'both', false: 'either'};
           if (limbs.length >= 2 && limbs[0].noun === limbs[1].noun) {
-            limbs = [{adjective: {true: 'both', false: 'either'}, noun: limbs[0].noun, plural: true}].concat(limbs.slice(2));
+            limbs = [{adjective: both, noun: limbs[0].noun, plural: true}].concat(limbs.slice(2));
           }
           if (limbs.length >= 2 && limbs[limbs.length - 2].noun === limbs[limbs.length - 1].noun) {
-            limbs = limbs.slice(0, -2).concat({adjective: 'both', noun: limbs[limbs.length - 1].noun, plural: true});
+            limbs = limbs.slice(0, -2).concat({adjective: both, noun: limbs[limbs.length - 1].noun, plural: true});
           }
         }
         return limbs;
