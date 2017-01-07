@@ -12,9 +12,34 @@
   </body>
   <script>
     (function global() {
+
       function choice(items) {
         return items[Math.floor(Math.random() * items.length)];
       }
+
+      function onPurpose(verb) {
+        var adverb = choice([null, 'deliberately', 'intentionally', 'voluntarily']);
+        if (adverb) {
+          return adverb + ' ' + verb;
+        } else {
+          return verb;
+        }
+      }
+
+      function getMethod() {
+        return choice([
+            {verb: 'lost', affirmative: true},
+            {verb: 'is missing', affirmative: true},
+            {verb: 'no longer has', affirmative: false},
+            {verb: onPurpose('cut off'), affirmative: true},
+            {verb: onPurpose('chopped off'), affirmative: true},
+            {verb: onPurpose('sliced off'), affirmative: true},
+            {verb: onPurpose('lopped off'), affirmative: true},
+            {verb: onPurpose('severed'), affirmative: true},
+            {verb: onPurpose('amputated'), affirmative: true},
+            {verb: onPurpose('removed'), affirmative: true}]);
+      }
+
       function weightedChoice(itemDict) {
         var sum = 0;
         var position = Math.random();
@@ -25,17 +50,7 @@
           }
         }
       }
-      function capitalize(str) {
-        return str.charAt(0).toUpperCase() + str.slice(1);
-      }
-      function adverbify(verb) {
-        var adverb = choice([null, 'deliberately', 'intentionally', 'voluntarily']);
-        if (adverb) {
-          return adverb + ' ' + verb;
-        } else {
-          return verb;
-        }
-      }
+
       function shuffle(array) {
         for (var i = array.length - 1; i > 0; i--) {
           var j = Math.floor(Math.random() * (i + 1));
@@ -45,6 +60,79 @@
         }
         return array;
       }
+
+      function map(array, callback) {
+        var transformed = [];
+        for (var i = 0; i < array.length; i++) {
+          transformed.push(callback(array[i]));
+        }
+        return transformed;
+      }
+
+      function sortedSample(array, n) {
+        var indexOptions = [];
+        for (var i = 0; i < array.length; i++) {
+          indexOptions.push(i);
+        }
+        shuffle(indexOptions);
+        var indices = indexOptions.slice(0, n);
+        indices.sort();
+        return map(indices, function(i) {
+          return array[i];
+        });
+      }
+
+      function getLimbs() {
+        var limbs = sortedSample(
+            [
+                {adjective: 'left', noun: choice(['hand', 'arm']), plural: false},
+                {adjective: 'right', noun: choice(['hand', 'arm']), plural: false},
+                {adjective: 'left', noun: choice(['foot', 'leg']), plural: false},
+                {adjective: 'right', noun: choice(['foot', 'leg']), plural: false}],
+            Number(weightedChoice({1: 0.4, 2: 0.3, 3: 0.2, 4: 0.1})));
+        if (limbs.length === 4 && limbs[0].noun === 'arm' && limbs[1].noun === 'arm' && limbs[2].noun === 'leg' &&
+            limbs[3].part === 'leg') {
+          limbs = [{adjective: {true: 'all four', false: 'any'}, noun: 'limb', plural: true}];
+        } else {
+          if (limbs.length >= 2 && limbs[0].noun === limbs[1].noun) {
+            limbs = [{adjective: {true: 'both', false: 'either'}, noun: limbs[0].noun, plural: true}].concat(limbs.slice(2));
+          }
+          if (limbs.length >= 2 && limbs[limbs.length - 2].noun === limbs[limbs.length - 1].noun) {
+            limbs = limbs.slice(0, -2).concat({adjective: 'both', noun: limbs[limbs.length - 1].noun, plural: true});
+          }
+        }
+        return limbs;
+      }
+
+      function capitalize(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
+      }
+
+      function every(array, callback) {
+        for (var i = 0; i < array.length; i++) {
+          if (!callback(array[i])) {
+            return false;
+          }
+        }
+        return true;
+      }
+
+      function aggregate(list, conjunction) {
+        switch (list.length) {
+          case 1:
+            return list[0];
+            break;
+          case 2:
+            return list[0] + ' ' + conjunction + ' ' + list[1];
+          default:
+            return list.slice(0, list.length - 1).join(', ') + ', ' + conjunction + ' ' + list[list.length - 1];
+        }
+      }
+
+      function adjectiveFor(item, affirmative) {
+        return typeof item.adjective === 'string' ? item.adjective : item.adjective[affirmative];
+      }
+
       function pluralize(word) {
         switch (word) {
           case 'foot':
@@ -53,56 +141,35 @@
             return word + 's';
         }
       }
-      function aggregate(list) {
-        switch (list.length) {
-          case 1:
-            return list[0];
-            break;
-          case 2:
-            return list[0] + ' and ' + list[1];
-          default:
-            return list.slice(0, list.length - 1).join(', ') + ', and ' + list[list.length - 1];
-        }
-      }
-      function refresh() {
-        var gender = choice([{subj: 'he', obj: 'him', poss: 'his'}, {subj: 'she', obj: 'her', poss: 'her'}]);
-        var method = choice([
-            'lost', 'is missing', 'no longer has', adverbify('cut off'), adverbify('chopped off'), adverbify('sliced off'),
-            adverbify('lopped off'), adverbify('severed'), adverbify('amputated'), adverbify('removed')]);
-        var numberOfLimbs = Number(weightedChoice({1: 0.4, 2: 0.3, 3: 0.2, 4: 0.1}));
-        var limbs = [];        
-        var limbOptions = [
-            {side: 'left', part: choice(['hand', 'arm'])},
-            {side: 'right', part: choice(['hand', 'arm'])},
-            {side: 'left', part: choice(['foot', 'leg'])},
-            {side: 'right', part: choice(['foot', 'leg'])}];
-        var limbIndexOptions = [0, 1, 2, 3];
-        shuffle(limbIndexOptions);
-        var limbIndices = limbIndexOptions.slice(0, numberOfLimbs);
-        limbIndices.sort();
-        for (var i = 0; i < numberOfLimbs; i++) {
-          limbs.push(limbOptions[limbIndices[i]]);
-        }
-        var limbPhrases = [];
-        if (numberOfLimbs === 4 && limbs[0].part === 'arm' && limbs[1].part === 'arm' && limbs[2].part === 'leg' &&
-            limbs[3].part === 'leg') {
-          limbPhrases.push('all four of ' + gender.poss + ' limbs');
+
+      function renderAsPossessiveAggregate(items, possessive, affirmative) {
+        var conjunction = affirmative ? 'and' : 'or';
+        if (every(items, function(item) {
+          return !item.plural;
+        })) {
+          return possessive + ' ' + aggregate(map(items, function(item) {
+            return adjectiveFor(item, affirmative) + ' ' + item.noun;
+          }), conjunction);
         } else {
-          for (var i = 0; i < limbs.length - 1; i++) {
-            if (limbs[i].part === limbs[i + 1].part) {
-              limbPhrases.push('both of ' + gender.poss + ' ' + pluralize(limbs[i].part));
-              i++;
+          return aggregate(map(items, function(item) {
+            if (item.plural) {
+              return adjectiveFor(item, affirmative) + ' of ' + possessive + ' ' + pluralize(item);
             } else {
-              limbPhrases.push(limbs[i].side + ' ' + limbs[i].part);
+              return possessive + ' ' + adjectiveFor(item, affirmative) + ' ' + item.noun;
             }
-          }
-          if (i === limbs.length - 1) {
-            limbPhrases.push(limbs[i].side + ' ' + limbs[i].part);
-          }
+          }), conjunction);
         }
-        document.getElementById('amputee').innerText =
-            capitalize(gender.subj) + ' ' + method + ' ' + gender.poss + ' ' + aggregate(limbPhrases) + '.';
       }
+
+      function refresh() {
+        var gender = choice([{subject: 'he', possessive: 'his'}, {subject: 'she', possessive: 'her'}]);
+        var method = getMethod();
+        var limbs = getLimbs();
+        document.getElementById('amputee').innerText =
+            capitalize(gender.subject) + ' ' + method.verb + ' ' + gender.possessive + ' ' +
+            renderAsPossessiveAggregate(limbs, gender.possessive, method.affirmative) + '.';
+      }
+
       document.getElementById('refresh').onclick = refresh;
       refresh();
     })();
