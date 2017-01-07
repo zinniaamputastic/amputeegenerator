@@ -153,7 +153,7 @@
         } else {
           return aggregate(map(items, function(item) {
             if (item.plural) {
-              return adjectiveFor(item, affirmative) + ' of ' + possessive + ' ' + pluralize(item);
+              return adjectiveFor(item, affirmative) + ' of ' + possessive + ' ' + pluralize(item.noun);
             } else {
               return possessive + ' ' + adjectiveFor(item, affirmative) + ' ' + item.noun;
             }
