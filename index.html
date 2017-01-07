@@ -166,7 +166,7 @@
         var method = getMethod();
         var limbs = getLimbs();
         document.getElementById('amputee').innerText =
-            capitalize(gender.subject) + ' ' + method.verb + ' ' + gender.possessive + ' ' +
+            capitalize(gender.subject) + ' ' + method.verb + ' ' +
             renderAsPossessiveAggregate(limbs, gender.possessive, method.affirmative) + '.';
       }
 
