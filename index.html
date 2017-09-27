@@ -95,7 +95,7 @@
                 {adjective: 'right', noun: choice(['foot', 'leg']), plural: false}],
             Number(weightedChoice({1: 8, 2: 4, 3: 2, 4: 1})));
         if (limbs.length === 4 && limbs[0].noun === 'arm' && limbs[1].noun === 'arm' && limbs[2].noun === 'leg' &&
-            limbs[3].part === 'leg') {
+            limbs[3].noun === 'leg') {
           limbs = [{adjective: {true: 'all four', false: 'any'}, noun: 'limb', plural: true}];
         } else {
           var both = {true: 'both', false: 'either'};
