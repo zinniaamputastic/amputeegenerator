@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <title>xkcd #1930: Calendar Facts</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  </head>
+  <body>
+    <h1 id="fact"><noscript>This page needs JavaScript.</noscript></h1>
+    <button id="refresh">Refresh</button>
+    <p><a href="https://xkcd.com/1930/" target="_blank">Source</a></p>
+  </body>
+  <script>
+    (function global() {
+
+      function a() {
+        return arguments[Math.floor(Math.random() * arguments.length)];
+      }
+
+      function refresh() {
+        var fact = document.getElementById('fact');
+        fact.innerText =
+          'Did you know that ' +
+            a('the ' + a('fall', 'spring') + ' equinox',
+              'the ' + a('winter solstice', 'Winter Olympics', 'summer solstice', 'Summer Olympics'),
+              'the ' + a('earliest', 'latest') + ' ' + a('sunrise', 'sunset'),
+              'Daylight ' + a('Saving', 'Savings') + ' Time',
+              'the leap ' + a('day', 'year'),
+              'Easter',
+              'the ' + a('harvest ', 'super', 'blood ') + 'moon',
+              'Toyota Truck Month',
+              'Shark Week') +
+            ' ' +
+            a('happens ' + a('earlier', 'later', 'at the wrong time') + ' every year',
+              'drifts out of sync with the ' +
+                a('Sun',
+                  'Moon',
+                  'zodiac',
+                  a('Gregorian', 'Mayan', 'lunar', 'iPhone') + ' calendar',
+                  'atomic clock in Colorado'),
+              'might ' + a('not happen', 'happen twice') + ' this year') +
+            ' because of ' +
+            a('time zone legislation in ' + a('Indiana', 'Arizona', 'Russia'),
+              'a decree by the pope in the 1500s',
+              a('precession', 'libration', 'nutation', 'libation', 'eccentricity', 'obliquity') +
+                ' of the ' +
+                a('Moon',
+                  'Sun',
+                  "Earth's axis",
+                  'equator',
+                  'prime meridian',
+                  a('International Date', 'Mason–Dixon') + ' Line'),
+              'magnetic field reversal',
+              'an arbitrary decision by ' + a('Benjamin Franklin', 'Isaac Newton', 'FDR')) +
+            '? Apparently ' +
+            a('it causes a predictable increase in car accidents.',
+              "that's why we have leap seconds."
+              'scientists are really worried.',
+              'it was even more extreme during the ' + a('Bronze Age.', 'Ice Age.', 'Cretaceous.', '1990s.'),
+              "there's a proposal to fix it, but it " +
+                a('will never happen.',
+                  'actually makes things worse.',
+                  'is stalled in Congress.',
+                  'might be unconstitutional.'),
+              "it's getting worse and no one knows why.");
+        fact.title =
+          'While it may seem like trivia, it ' +
+            a('causes huge headaches for software developers',
+              'is taken advantage of by high-speed traders',
+              'triggered the 2003 Northeast Blackout',
+              'has to be corrected for by GPS satellites',
+              'is now recognized as a major cause of World War I') +
+            '.';
+      }
+
+      document.getElementById('refresh').onclick = refresh;
+      refresh();
+    })();
+  </script>
+</html>
