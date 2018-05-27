@@ -26,11 +26,11 @@
         }
       }
 
-      function getMethod() {
+      function getMethod(linking, possessing) {
         return choice([
             {verb: 'lost', affirmative: true},
-            {verb: 'is missing', affirmative: true},
-            {verb: 'no longer has', affirmative: false},
+            {verb: linking + ' missing', affirmative: true},
+            {verb: 'no longer ' + possessing, affirmative: false},
             {verb: onPurpose('cut off'), affirmative: true},
             {verb: onPurpose('chopped off'), affirmative: true},
             {verb: onPurpose('sliced off'), affirmative: true},
@@ -167,8 +167,11 @@
       }
 
       function refresh() {
-        var gender = choice([{subject: 'they', possessive: 'their'}, {subject: 'she', possessive: 'her'}]);
-        var method = getMethod();
+        var gender = [
+          {subject: 'they', possessive: 'their', linking: 'are', possessing: 'have'},
+          {subject: 'she', possessive: 'her', linking: 'is', possessing: 'has'}
+        ][Number(weightedChoice({0: 1, 1: 4}))];
+        var method = getMethod(gender.linking, gender.possessing);
         var limbs = getLimbs();
         document.getElementById('amputee').innerText =
             capitalize(gender.subject) + ' ' + method.verb + ' ' +
