@@ -93,7 +93,7 @@
                 {adjective: 'right', noun: choice(['hand', 'arm']), plural: false},
                 {adjective: 'left', noun: choice(['foot', 'leg']), plural: false},
                 {adjective: 'right', noun: choice(['foot', 'leg']), plural: false}],
-            Number(weightedChoice({1: 8, 2: 4, 3: 2, 4: 1})));
+            Number(weightedChoice({1: 27, 2: 9, 3: 3, 4: 1})));
         if (limbs.length === 4 && limbs[0].noun === 'arm' && limbs[1].noun === 'arm' && limbs[2].noun === 'leg' &&
             limbs[3].noun === 'leg') {
           limbs = [{adjective: {true: 'all four', false: 'any'}, noun: 'limb', plural: true}];
@@ -170,7 +170,7 @@
         var gender = [
           {subject: 'they', possessive: 'their', linking: 'are', possessing: 'have'},
           {subject: 'she', possessive: 'her', linking: 'is', possessing: 'has'}
-        ][Number(weightedChoice({0: 1, 1: 4}))];
+        ][Number(weightedChoice({0: 1, 1: 9}))];
         var method = getMethod(gender.linking, gender.possessing);
         var limbs = getLimbs();
         document.getElementById('amputee').innerText =
